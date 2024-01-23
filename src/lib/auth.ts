@@ -40,8 +40,17 @@ export const authOptions: NextAuthOptions = {
             // const dbUser = (await db.get(`user:${token.id}`)) as User | null
             const dbUserResult = (await fetchRedis('get', `user:${token.id}`)) as string | null
 
+            // check if user is not in database, make new one
             if (!dbUserResult) {
+                // Generate a random username if it doesn't exist in the database
+                const firstUserNames = ['Jack', 'Joy', 'Audrey']
+                const lastUserNames = ['George', 'Steward', 'Ashley']
+
+                const randomFirstUserName = firstUserNames[Math.floor(Math.random() * firstUserNames.length)]
+                const randomLastUserName = lastUserNames[Math.floor(Math.random() * lastUserNames.length)]
+
                 token.id = user!.id
+                token.username = `${randomFirstUserName}${randomLastUserName}`
                 return token
             }
 
@@ -50,6 +59,7 @@ export const authOptions: NextAuthOptions = {
             return {
                 id: dbUser.id,
                 name: dbUser.name,
+                username: dbUser.username,
                 email: dbUser.email,
                 picture: dbUser.image,
             }
