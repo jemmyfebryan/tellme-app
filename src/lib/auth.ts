@@ -42,6 +42,9 @@ export const authOptions: NextAuthOptions = {
 
             // check if user is not in database, make new one
             if (!dbUserResult) {
+                if (user) {
+                    token.id = user!.id
+                }
                 // Generate a random username if it doesn't exist in the database
                 const firstUserNames = ['Jack', 'Joy', 'Audrey']
                 const lastUserNames = ['George', 'Steward', 'Ashley']
@@ -49,8 +52,8 @@ export const authOptions: NextAuthOptions = {
                 const randomFirstUserName = firstUserNames[Math.floor(Math.random() * firstUserNames.length)]
                 const randomLastUserName = lastUserNames[Math.floor(Math.random() * lastUserNames.length)]
 
-                token.id = user!.id
                 token.username = `${randomFirstUserName}${randomLastUserName}`
+
                 return token
             }
 

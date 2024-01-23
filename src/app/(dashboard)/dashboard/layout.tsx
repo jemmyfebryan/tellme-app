@@ -102,9 +102,25 @@ const Layout = async ({ children }: LayoutProps) => {
 
                                 <span className="sr-only">Your Profile</span>
                                 <div className="flex flex-col">
-                                    <span aria-hidden='true'>{session.user.name}</span>
+                                    <span aria-hidden='true'>
+                                        {session.user.name
+                                            ? (
+                                            session.user.name.length > 17
+                                                ? `${session.user.name.substring(0, 14)}...`
+                                                : session.user.name
+                                            )
+                                            : 'No name available'
+                                        }
+                                    </span>
                                     <span className="text-xs text-zinc-400" aria-hidden='true'>
-                                        {session.user.email}
+                                        {session.user.email
+                                            ? (
+                                            session.user.email.length > 23
+                                                ? `${session.user.email.substring(0, 20)}...`
+                                                : session.user.email
+                                            )
+                                            : 'No email available'
+                                        }
                                     </span>
                                 </div>
                             </div>
@@ -114,7 +130,8 @@ const Layout = async ({ children }: LayoutProps) => {
                     </ul>
                 </nav>
             </div>
-            {children}
+            {/* {children} */}
+            <aside className="max-h-screen container py-16 md:py-12 w-full">{children}</aside>
         </div>
     )
 }
