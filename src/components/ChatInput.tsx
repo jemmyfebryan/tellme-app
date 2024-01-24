@@ -5,13 +5,16 @@ import TextareaAutosize from 'react-textarea-autosize'
 import Button from './ui/Button'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { nanoid } from 'nanoid'
 
 interface ChatInputProps {
     chatPartner: User
     chatId: string
+    updateMessages: (newMessage: Message) => void
 }
 
-const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
+const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId, updateMessages
+ }) => {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')
@@ -23,6 +26,24 @@ const ChatInput: FC<ChatInputProps> = ({ chatPartner, chatId }) => {
         try {
             // await new Promise((resolve) => setTimeout(resolve, 1000))
             await axios.post('/api/message/send', { text: input, chatId })
+
+            // Create a new message object based on your data structure
+            const [userId1, userId2] = chatId.split('--')
+
+            const partnerId = chatPartner.id === userId1 ? userId1 : userId2
+            const senderId = chatPartner.id === userId1 ? userId2 : userId1
+
+            const newMessage: Message = {
+                id: nanoid(), // replace with the actual id
+                senderId: senderId, // replace with the actual senderId
+                receiverId: partnerId,
+                text: input,
+                timestamp: Date.now(), // replace with the actual timestamp
+            };
+
+            // Update the messages in the parent component
+            updateMessages(newMessage);
+
             setInput('')
             textareaRef.current?.focus()
         } catch (error) {

@@ -1,11 +1,14 @@
-import ChatInput from '@/components/ChatInput'
 import Messages from '@/components/Messages'
+import Button from '@/components/ui/Button'
 import { fetchRedis } from '@/helpers/redis'
 import { authOptions } from '@/lib/auth'
 import { messageArrayValidator } from '@/lib/validations/message'
+import { RefreshCw } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { chatHrefConstructor } from '@/lib/utils'
 
 interface PageProps {
   params: {
@@ -83,6 +86,15 @@ const page = async ({ params }: PageProps) => {
             <span className='text-sm text-gray-600'>{chatPartner.email}</span>
           </div>
         </div>
+
+        <div className='flex-shrink-0 mr-3 flex items-center'>
+          {/* <Link href={`/dashboard/chat/${chatHrefConstructor(session.user.id, chatPartnerId)}`}>
+
+            <Button type='submit'>
+              <RefreshCw />
+            </Button>
+          </Link> */}
+        </div>
       </div>
 
       <Messages
@@ -90,8 +102,9 @@ const page = async ({ params }: PageProps) => {
         sessionImg={session.user.image}
         sessionId={session.user.id}
         initialMessages={initialMessages}
+        chatId={chatId}
       />
-      <ChatInput chatId={chatId} chatPartner={chatPartner} />
+      
     </div>
   )
 }
